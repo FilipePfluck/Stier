@@ -1,3 +1,4 @@
+import { css, cx } from '@/styled-system/css'
 import '../globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -14,9 +15,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const bodyClassname = cx(
+    inter.className,
+    css({ bg: 'gray.2', color: 'gray.12' }),
+  )
+
   return (
     <html lang="en" className="dark">
-      <body className={inter.className}>{children}</body>
+      <body className={bodyClassname}>{children}</body>
     </html>
   )
 }
