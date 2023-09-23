@@ -5,7 +5,12 @@ export default defineConfig({
   preflight: true,
   include: ['./src/**/*.{js,jsx,ts,tsx}', './pages/**/*.{js,jsx,ts,tsx}'],
   exclude: [],
-  presets: [radixColorsPreset(), '@pandacss/preset-panda'],
+  presets: [
+    radixColorsPreset({
+      darkMode: true,
+    }),
+    '@pandacss/preset-panda',
+  ],
   theme: {
     extend: {},
   },
