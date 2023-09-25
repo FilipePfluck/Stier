@@ -1,0 +1,69 @@
+import { Item } from '../Item'
+import * as S from './styles'
+
+export const Unused = () => {
+  return (
+    <S.UnusedGrid>
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/152.png"
+        name="Chikorita"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/155.png"
+        name="Cyndaquil"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/158.png"
+        name="Totodile"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/152.png"
+        name="Chikorita"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/155.png"
+        name="Cyndaquil"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/158.png"
+        name="Totodile"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/152.png"
+        name="Chikorita"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/155.png"
+        name="Cyndaquil"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/158.png"
+        name="Totodile"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/152.png"
+        name="Chikorita"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/155.png"
+        name="Cyndaquil"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/158.png"
+        name="Totodile"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/152.png"
+        name="Chikorita"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/155.png"
+        name="Cyndaquil"
+      />
+      <Item
+        src="https://assets.pokemon.com/assets/cms2/img/pokedex/detail/158.png"
+        name="Totodile"
+      />
+    </S.UnusedGrid>
+  )
+}

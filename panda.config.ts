@@ -1,4 +1,4 @@
-import { defineConfig } from '@pandacss/dev'
+import { defineConfig, defineGlobalStyles } from '@pandacss/dev'
 import radixColorsPreset from 'pandacss-preset-radix-colors'
 
 export default defineConfig({
@@ -16,4 +16,21 @@ export default defineConfig({
   },
   jsxFramework: 'react',
   outdir: 'styled-system',
+  globalCss: defineGlobalStyles({
+    '::-webkit-scrollbar': {
+      width: '16px',
+    },
+
+    '::-webkit-scrollbar-track': {
+      bg: 'gray.3',
+    },
+
+    '::-webkit-scrollbar-thumb': {
+      bg: 'gray.5',
+      transition: '0.2s',
+      '&:hover': {
+        bg: 'gray.6',
+      },
+    },
+  }),
 })

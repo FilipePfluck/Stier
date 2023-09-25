@@ -6,7 +6,7 @@ export const TierRow = styled(
   cva({
     base: {
       w: 'full',
-      minH: '20',
+      minH: '24',
       bg: 'gray.3',
       borderTop: '1px solid token(colors.gray.1)',
       borderX: '1px solid token(colors.gray.1)',
