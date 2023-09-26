@@ -15,5 +15,18 @@ export const ItemContainer = styled(
       alignItems: 'center',
       justifyContent: 'center',
     },
+    variants: {
+      isDragging: {
+        true: {
+          boxShadow: '2xl',
+        },
+        false: {
+          boxShadow: 'none',
+        },
+      },
+    },
+    defaultVariants: {
+      isDragging: false,
+    },
   }),
 )
