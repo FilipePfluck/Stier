@@ -92,3 +92,16 @@ const tierLabelStyles = cva({
 export const TierLabel = styled('div', tierLabelStyles)
 
 export type RowLabelVariants = RecipeVariantProps<typeof tierLabelStyles>
+
+export const TierItems = styled(
+  'ul',
+  cva({
+    base: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, 96px)',
+      gap: '2',
+      w: 'full',
+      p: '2',
+    },
+  }),
+)

@@ -24,6 +24,10 @@ export const ItemContainer = styled(
           boxShadow: 'none',
         },
       },
+      shadow: {
+        true: { opacity: 0.6 },
+        false: {},
+      },
     },
     defaultVariants: {
       isDragging: false,

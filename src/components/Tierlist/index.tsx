@@ -45,6 +45,7 @@ import { Table } from './Table'
 import { Unused } from './Unused'
 
 import { coordinateGetter } from '../../utils/multipleContainersKeyboardCoordinates'
+import { createPortal } from 'react-dom'
 
 type Items = Record<UniqueIdentifier, UniqueIdentifier[]>
 
@@ -284,6 +285,16 @@ export const Tierlist = () => {
     setClonedItems(null)
   }
 
+  const dropAnimation: DropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: '0.5',
+        },
+      },
+    }),
+  }
+
   return (
     <DndContext
       sensors={sensors}
@@ -302,6 +313,7 @@ export const Tierlist = () => {
         <Table />
         <Unused />
       </Flex>
+      {/* TODO display overlays here */}
     </DndContext>
   )
 }
