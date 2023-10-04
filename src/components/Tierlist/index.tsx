@@ -1,77 +1,245 @@
-// here's a reference from the dndkit examples
-// https://github.com/clauderic/dnd-kit/blob/master/stories/2%20-%20Presets/Sortable/MultipleContainers.tsx
-
-import { useCallback, useEffect, useRef, useState } from 'react'
-
 import {
-  CancelDrop,
-  closestCenter,
-  pointerWithin,
-  rectIntersection,
   CollisionDetection,
   DndContext,
+  DragEndEvent,
+  DragOverEvent,
   DragOverlay,
+  DragStartEvent,
   DropAnimation,
-  getFirstCollision,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
-  Modifiers,
-  useDroppable,
   UniqueIdentifier,
-  useSensors,
-  useSensor,
-  MeasuringStrategy,
-  KeyboardCoordinateGetter,
+  closestCenter,
   defaultDropAnimationSideEffects,
-  DragOverEvent,
-  DragEndEvent,
-  DragStartEvent,
+  getFirstCollision,
+  pointerWithin,
+  rectIntersection,
+  useSensor,
+  useSensors,
 } from '@dnd-kit/core'
 import {
-  AnimateLayoutChanges,
   SortableContext,
-  useSortable,
   arrayMove,
-  defaultAnimateLayoutChanges,
-  verticalListSortingStrategy,
-  SortingStrategy,
-  horizontalListSortingStrategy,
+  rectSortingStrategy,
 } from '@dnd-kit/sortable'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { coordinateGetter } from '@/utils/multipleContainersKeyboardCoordinates'
 import { Flex } from '@/styled-system/jsx'
-
-import { Table } from './Table'
-import { Unused } from './Unused'
-
-import { coordinateGetter } from '../../utils/multipleContainersKeyboardCoordinates'
+import { TierRow } from './TierRow/styles'
+import { Row } from './TierRow'
+import { SortableRow } from './TierRow/SortableRow'
 import { createPortal } from 'react-dom'
+import { Item } from './Item'
 
 type Items = Record<UniqueIdentifier, UniqueIdentifier[]>
+type Colors = Record<
+  UniqueIdentifier,
+  | 'red'
+  | 'tomato'
+  | 'orange'
+  | 'amber'
+  | 'yellow'
+  | 'lime'
+  | 'cyan'
+  | 'indigo'
+  | 'plum'
+  | 'violet'
+  | 'grass'
+  | 'jade'
+  | 'crimsom'
+  | undefined
+>
+
+const dropAnimation: DropAnimation = {
+  sideEffects: defaultDropAnimationSideEffects({
+    styles: {
+      active: {
+        opacity: '0.6',
+      },
+    },
+  }),
+}
+
+type Pokemon = {
+  [key: string]: {
+    name: string
+    src: string
+  }
+}
+
+const pokemon: Pokemon = {
+  charmander: {
+    name: 'Charmander',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/004.png',
+  },
+  squirtle: {
+    name: 'Squirle',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/007.png',
+  },
+  bulbasaur: {
+    name: 'Bulbasaur',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/001.png',
+  },
+  chikorita: {
+    name: 'Chikorita',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/152.png',
+  },
+  totodile: {
+    name: 'Totodile',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/158.png',
+  },
+  cyndaquil: {
+    name: 'Cyndaquil',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/155.png',
+  },
+  treecko: {
+    name: 'Treecko',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/252.png',
+  },
+  torchic: {
+    name: 'Torchic',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/255.png',
+  },
+  mudkip: {
+    name: 'Mudkip',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/258.png',
+  },
+  turtwig: {
+    name: 'Turtwig',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/387.png',
+  },
+  chimchar: {
+    name: 'Chimchar',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/390.png',
+  },
+  piplup: {
+    name: 'Piplup',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/393.png',
+  },
+  snivy: {
+    name: 'Snivy',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/495.png',
+  },
+  tepig: {
+    name: 'Tepig',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/498.png',
+  },
+  oshawott: {
+    name: 'Oshawott',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/501.png',
+  },
+  chespin: {
+    name: 'Chespin',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/650.png',
+  },
+  fennekin: {
+    name: 'Fennekin',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/653.png',
+  },
+  froakie: {
+    name: 'Froakie',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/656.png',
+  },
+  rowlet: {
+    name: 'Rowlet',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/722.png',
+  },
+  litten: {
+    name: 'Litten',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/725.png',
+  },
+  popplio: {
+    name: 'Popplio',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/728.png',
+  },
+  grookey: {
+    name: 'Grookey',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/810.png',
+  },
+  scorbunny: {
+    name: 'Scorbunny',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/813.png',
+  },
+  sobble: {
+    name: 'Sobble',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/816.png',
+  },
+  sprigatito: {
+    name: 'Sprigatito',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/906.png',
+  },
+  fuecoco: {
+    name: 'Fuecoco',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/909.png',
+  },
+  quaxly: {
+    name: 'Quaxly',
+    src: 'https://assets.pokemon.com/assets/cms2/img/pokedex/detail/912.png',
+  },
+}
 
 export const Tierlist = () => {
+  const [isInClient, setIsInClient] = useState(false)
+
   const [items, setItems] = useState<Items>({
-    A: ['bulbasaur', 'charmander', 'squirtle'],
-    B: ['chikorita', 'cyndaquil', 'totodile'],
-    C: ['treecko', 'torchic', 'mudkip'],
-    D: ['turtwig', 'chimchar', 'piplup'],
-    UNUSED: ['snivy', 'tepig', 'oshawott', 'chespin', 'fenniken', 'froakie'],
+    S: [
+      'charmander',
+      'treecko',
+      'torchic',
+      'mudkip',
+      'turtwig',
+      'piplup',
+      'chimchar',
+      'froakie',
+      'rowlet',
+    ],
+    A: ['squirtle', 'totodile', 'cyndaquil', 'oshawott', 'fuecoco'],
+    B: [
+      'bulbasaur',
+      'chikorita',
+      'snivy',
+      'tepig',
+      'fennekin',
+      'grookey',
+      'quaxly',
+      'sprigatito',
+    ],
+    C: ['chespin', 'litten', 'popplio', 'scorbunny'],
+    D: ['sobble'],
   })
+  const [clonedItems, setClonedItems] = useState<Items | null>(null)
   const [containers, setContainers] = useState(
     Object.keys(items) as UniqueIdentifier[],
   )
-  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
-  const [clonedItems, setClonedItems] = useState<Items | null>(null)
+  const [containersColors, setContainersColors] = useState<Colors>({
+    S: 'red',
+    A: 'tomato',
+    B: 'orange',
+    C: 'amber',
+    D: 'yellow',
+    E: 'lime',
+  })
 
+  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null)
   const lastOverId = useRef<UniqueIdentifier | null>(null)
   const recentlyMovedToNewContainer = useRef(false)
-  const isSortingContainer = activeId ? containers.includes(activeId) : false
+
+  const sensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(TouchSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter,
+    }),
+  )
+
+  useEffect(() => {
+    setIsInClient(true)
+  }, [])
 
   const collisionDetectionStrategy: CollisionDetection = useCallback(
     (args) => {
-      // this checks if the activeId is a key in items
-      // i.e if the item being dragged is one of the dropable areas (they can also be reordered)
-
       if (activeId && activeId in items) {
         return closestCenter({
           ...args,
@@ -94,7 +262,7 @@ export const Tierlist = () => {
         if (overId in items) {
           const containerItems = items[overId]
 
-          // If a container is matched and it contains items
+          // If a container is matched and it contains items (columns 'A', 'B', 'C')
           if (containerItems.length > 0) {
             // Return the closest droppable within that container
             overId = closestCenter({
@@ -127,25 +295,6 @@ export const Tierlist = () => {
     [activeId, items],
   )
 
-  // sensors are abstractions to detact different input methods,
-  // such as mouse or keyboard
-  // here we're using built in sensors for mouse and touch, and a custom one for keyboard
-  // https://docs.dndkit.com/api-documentation/sensors
-
-  const sensors = useSensors(
-    useSensor(MouseSensor),
-    useSensor(TouchSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter,
-    }),
-  )
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      recentlyMovedToNewContainer.current = false
-    })
-  }, [items])
-
   const findContainer = (id: UniqueIdentifier) => {
     if (id in items) {
       return id
@@ -154,26 +303,15 @@ export const Tierlist = () => {
     return Object.keys(items).find((key) => items[key].includes(id))
   }
 
-  const getIndex = (id: UniqueIdentifier) => {
-    const container = findContainer(id)
-
-    if (!container) {
-      return -1
-    }
-
-    const index = items[container].indexOf(id)
-
-    return index
-  }
-
-  const onDragStart = ({ active }: DragStartEvent) => {
+  const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveId(active.id)
     setClonedItems(items)
   }
 
-  const onDragOver = ({ active, over }: DragOverEvent) => {
+  const handleDragOver = ({ active, over }: DragOverEvent) => {
     const overId = over?.id
 
+    // if it is over nothing, or over a container (they can be sorted too), do nothing
     if (overId == null || active.id in items) {
       return
     }
@@ -229,7 +367,7 @@ export const Tierlist = () => {
     }
   }
 
-  const onDragEnd = ({ active, over }: DragEndEvent) => {
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (active.id in items && over?.id) {
       setContainers((containers) => {
         const activeIndex = containers.indexOf(active.id)
@@ -274,7 +412,7 @@ export const Tierlist = () => {
     setActiveId(null)
   }
 
-  const onDragCancel = () => {
+  const handleDragCancel = () => {
     if (clonedItems) {
       // Reset items to their original state in case items have been
       // Dragged across containers
@@ -285,35 +423,71 @@ export const Tierlist = () => {
     setClonedItems(null)
   }
 
-  const dropAnimation: DropAnimation = {
-    sideEffects: defaultDropAnimationSideEffects({
-      styles: {
-        active: {
-          opacity: '0.5',
-        },
-      },
-    }),
+  const renderSortableRowOverlay = (id: UniqueIdentifier) => {
+    return (
+      <Row
+        label={id}
+        id={id as string}
+        color={containersColors[id]}
+        handleProps={{}}
+      >
+        {items[id].map((itemId) => (
+          <Item
+            key={itemId}
+            id={itemId as string}
+            name={pokemon[itemId].name}
+            src={pokemon[itemId].src}
+          />
+        ))}
+      </Row>
+    )
+  }
+
+  const renderSortableItemOverlay = (id: UniqueIdentifier) => {
+    return (
+      <Item
+        key={id}
+        id={id as string}
+        name={pokemon[id].name}
+        src={pokemon[id].src}
+        overlay
+      />
+    )
   }
 
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={collisionDetectionStrategy}
-      measuring={{
-        droppable: {
-          strategy: MeasuringStrategy.Always,
-        },
-      }}
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDragEnd={onDragEnd}
-      onDragCancel={onDragCancel}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
     >
-      <Flex p="20" gap="8" direction="column">
-        <Table />
-        <Unused />
+      <Flex direction="column" maxW="1200px" w="full">
+        <SortableContext items={containers}>
+          {containers.map((containerId) => (
+            <SortableRow
+              key={containerId}
+              label={containerId}
+              id={containerId as string}
+              color={containersColors[containerId]}
+              items={items[containerId]}
+            />
+          ))}
+        </SortableContext>
       </Flex>
-      {/* TODO display overlays here */}
+      {isInClient &&
+        createPortal(
+          <DragOverlay adjustScale dropAnimation={dropAnimation}>
+            {activeId
+              ? containers.includes(activeId)
+                ? renderSortableRowOverlay(activeId)
+                : renderSortableItemOverlay(activeId)
+              : null}
+          </DragOverlay>,
+          document.body,
+        )}
     </DndContext>
   )
 }

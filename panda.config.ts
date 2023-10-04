@@ -12,7 +12,21 @@ export default defineConfig({
     '@pandacss/preset-panda',
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        fadein: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        pop: {
+          '0%': { transform: 'scale(1)', boxShadow: 'var(--box-shadow)' },
+          '100%': {
+            transform: 'scale(var(--scale))',
+            boxShadow: 'var(--box-shadow-picked-up)',
+          },
+        },
+      },
+    },
   },
   jsxFramework: 'react',
   outdir: 'styled-system',

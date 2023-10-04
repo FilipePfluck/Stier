@@ -1,6 +1,3 @@
-// this is a sensor to handle keyboard navigation in an accessible way
-// see example: https://github.com/clauderic/dnd-kit/blob/master/stories/2%20-%20Presets/Sortable/multipleContainersKeyboardCoordinates.ts
-
 import {
   closestCorners,
   getFirstCollision,
@@ -30,7 +27,6 @@ export const coordinateGetter: KeyboardCoordinateGetter = (
     const filteredContainers: DroppableContainer[] = []
 
     droppableContainers.getEnabled().forEach((entry) => {
-      // if there isn't an active droppableContainer, do nothing
       if (!entry || entry?.disabled) {
         return
       }
@@ -53,7 +49,6 @@ export const coordinateGetter: KeyboardCoordinateGetter = (
         }
       }
 
-      // check collisions
       switch (event.code) {
         case KeyboardCode.Down:
           if (collisionRect.top < rect.top) {
@@ -77,10 +72,6 @@ export const coordinateGetter: KeyboardCoordinateGetter = (
           break
       }
     })
-
-    // calculate to which droppableArea should the draggable go,
-    // using closestCorners algorythm
-    // https://docs.dndkit.com/api-documentation/context-provider/collision-detection-algorithms
 
     const collisions = closestCorners({
       active,

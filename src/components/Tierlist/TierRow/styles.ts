@@ -99,9 +99,40 @@ export const TierItems = styled(
     base: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fill, 96px)',
-      gap: '2',
+      gap: '3',
       w: 'full',
-      p: '2',
+      p: '3',
+    },
+  }),
+)
+
+export const Actions = styled(
+  'div',
+  cva({
+    base: {
+      p: '4',
+      bg: 'gray.1',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  }),
+)
+
+export const Handle = styled(
+  'button',
+  cva({
+    base: {
+      bg: 'transparent',
+      rounded: 'md',
+      cursor: 'pointer',
+      px: '2',
+      py: '4',
+      transition: '0.2s',
+      color: 'gray.11',
+      _hover: {
+        bg: 'gray.2',
+      },
     },
   }),
 )
