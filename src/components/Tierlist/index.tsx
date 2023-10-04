@@ -18,16 +18,11 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import {
-  SortableContext,
-  arrayMove,
-  rectSortingStrategy,
-} from '@dnd-kit/sortable'
+import { SortableContext, arrayMove } from '@dnd-kit/sortable'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { coordinateGetter } from '@/utils/multipleContainersKeyboardCoordinates'
 import { Flex } from '@/styled-system/jsx'
-import { TierRow } from './TierRow/styles'
 import { Row } from './TierRow'
 import { SortableRow } from './TierRow/SortableRow'
 import { createPortal } from 'react-dom'
@@ -213,7 +208,7 @@ export const Tierlist = () => {
   const [containers, setContainers] = useState(
     Object.keys(items) as UniqueIdentifier[],
   )
-  const [containersColors, setContainersColors] = useState<Colors>({
+  const [containersColors] = useState<Colors>({
     S: 'red',
     A: 'tomato',
     B: 'orange',

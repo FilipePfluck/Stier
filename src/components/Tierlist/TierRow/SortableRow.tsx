@@ -138,11 +138,9 @@ const pokemon: Pokemon = {
 
 export const SortableRow = ({ id, items, ...props }: SortableRowProps) => {
   const {
-    active,
     attributes,
     isDragging,
     listeners,
-    over,
     setNodeRef,
     transition,
     transform,
